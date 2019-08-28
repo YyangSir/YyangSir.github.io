@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言本章将介绍 Redis中 set 和 zset的基本使用和内部原理.因为这两种数据结构有很多相似的地方所以把他们放到一章中介绍.并且重点介绍zset 内部一个很重要的数据结构:跳跃表. 基本介绍set先来看看 set  Redis 中 set 集合很像Java 中 HashSet,键值对无序、唯一、不为空. 123456789&amp;gt; sadd books Java(integer 1)&amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你确定不来了解下 Redis 跳跃表的原理吗">
+<meta property="og:url" content="http://yoursite.com/2019/05/26/数据结构之zset/index.html">
+<meta property="og:site_name" content="杨洋的个人博客">
+<meta property="og:description" content="前言本章将介绍 Redis中 set 和 zset的基本使用和内部原理.因为这两种数据结构有很多相似的地方所以把他们放到一章中介绍.并且重点介绍zset 内部一个很重要的数据结构:跳跃表. 基本介绍set先来看看 set  Redis 中 set 集合很像Java 中 HashSet,键值对无序、唯一、不为空. 123456789&amp;gt; sadd books Java(integer 1)&amp;gt">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1g4r58fmf4kj31bs0tcmxs.jpg">
+<meta property="og:updated_time" content="2019-08-28T14:34:00.401Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你确定不来了解下 Redis 跳跃表的原理吗">
+<meta name="twitter:description" content="前言本章将介绍 Redis中 set 和 zset的基本使用和内部原理.因为这两种数据结构有很多相似的地方所以把他们放到一章中介绍.并且重点介绍zset 内部一个很重要的数据结构:跳跃表. 基本介绍set先来看看 set  Redis 中 set 集合很像Java 中 HashSet,键值对无序、唯一、不为空. 123456789&amp;gt; sadd books Java(integer 1)&amp;gt">
+<meta name="twitter:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1g4r58fmf4kj31bs0tcmxs.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/26/数据结构之zset/">
+
+
+
+
+
+  <title>你确定不来了解下 Redis 跳跃表的原理吗 | 杨洋的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨洋的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/26/数据结构之zset/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">你确定不来了解下 Redis 跳跃表的原理吗</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-26T14:02:12+08:00">
+                2019-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本章将介绍 Redis中 set 和 zset的基本使用和内部原理.因为这两种数据结构有很多相似的地方所以把他们放到一章中介绍.并且重点介绍zset 内部一个很重要的数据结构:跳跃表.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>先来看看 set </p>
+<p>Redis 中 set 集合很像Java 中 HashSet,键值对无序、唯一、不为空.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; sadd books Java</span><br><span class="line">(integer 1)</span><br><span class="line">&gt; sadd books Java</span><br><span class="line">(integer 0)				# value 值重复</span><br><span class="line">&gt; sadd books Go</span><br><span class="line">(integer 1)</span><br><span class="line">&gt; smembers books		# 无序</span><br><span class="line">1) &quot;Go&quot;</span><br><span class="line">2) &quot;Java&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p>zset 是 Redis 中最特别的基础数据结构,其他几个都能和 Java 大致对应上.它基本上还是一个 set 但是添加了一个 score 属性去保证有序性.其内部实现为跳跃表稍后将会着重介绍.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; zadd books 1 Java</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zadd books 2 Go</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zadd books 3 Python</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zrange books 0 -1 	#按 score 有序取出</span><br><span class="line">1) &quot;Java&quot;</span><br><span class="line">2) &quot;Go&quot;</span><br><span class="line">3) &quot;Python&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在 zset 中 score 的类型为 double 所以有时会出现小数点精度问题.</p>
+<p>当 zset 中最后一个 value 被删除后,这个和 zset 就会被自动删除,内存被回收.</p>
+<h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><p>Redis 的 zset 是个复合结构,是由一个 hash 和 skiplist 组成的,其中 hash 用来保存 value 和 score 对应关系.skiplist 用来给 score 排序.关于hash 的内部实现请参阅之前的一篇文章:《你确定不来了解一下Redis中 Hash的原理吗》,在这里我们着重介绍 skiplist 的实现.</p>
+<h3 id="skiplist-跳跃表"><a href="#skiplist-跳跃表" class="headerlink" title="skiplist 跳跃表"></a>skiplist 跳跃表</h3><p>因为zset需要高效的插入和删除,所以底层不适合使用数组实现,需要使用链表的结构.当插入新元素时需要根据 score插入到链表合适的位置,保证链表的有序性.高效的办法是通过二分查找去找到插入点.</p>
+<p>那么问题就来了,二分查找的对象必须是有序数组,只有数组支持快速定位,链表做不到该怎么办呢?这时,就该跳跃表出场了.</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g4r58fmf4kj31bs0tcmxs.jpg" alt></p>
+<p>如图所示,跳跃表在链表的基础上加入了层级L0~L3的概念,Redis 的跳跃表共有 64 层,可容纳 $2^{64}$ 个元素.每个元素的层级是随机分配的,分配 L0 的概率是 100%,就是说每个元素至少会有一层.分配L1 的概率是 50%,分配 L2 的概率是 25%,往上以此类推.</p>
+<p>每个 kv 对应的结构为zslnode.kv 之间使用指针形成有序的双向链表.同一层的 kv 会使用指针串起来.每层元素的遍历都是从跳跃表的头指针 kv header 出发.</p>
+<p>header 的结构也是 zslnode,当中 value 为 null,score 为 Double.MIN_VALUE排在最前面.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zslnode</span>&#123;</span></span><br><span class="line">    <span class="built_in">string</span> value;</span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line">    zslnode*[] forwards;	<span class="comment">//多层连接的指针</span></span><br><span class="line">    zslnode* backward;		<span class="comment">//回溯指针</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zsl</span>&#123;</span></span><br><span class="line">    zslnode* header;			<span class="comment">//跳跃表头指针</span></span><br><span class="line">    <span class="keyword">int</span> maxLevel;				<span class="comment">//当前节点的最高层</span></span><br><span class="line">    <span class="built_in">map</span>&lt;String,zslnode*&gt; ht;	<span class="comment">//hash 中的键值对</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h4><p>介绍完 skiplist的数据结构后,我们来具体看下skiplist 是怎样快速定位元素的.</p>
+<p>在上图中,假设我们要查找 <strong>3</strong> 这个节点.skiplist 会从 header 的顶层出发遍历搜索找到第一个比目标元素小的开始降一层,直到降到最底层找到 <strong>3</strong>这个节点,搜索路径为:</p>
+<ol>
+<li>L3:header -&gt; 4 -&gt; header         L3 层header找到 <strong>4</strong>比 <strong>3</strong> 大,回退到 header 同时降一层</li>
+<li>L2:header -&gt; 2 -&gt; 4 -&gt; 2            L2层header 找到 <strong>2</strong> 比 <strong>3</strong> 小,继续遍历找到 <strong>4</strong>,回退到 <strong>2</strong> 同时降一层</li>
+<li>L1: 2 -&gt; 4 -&gt;2                              L1 层 <strong>2</strong> 找到 <strong>4</strong> 比 <strong>3</strong> 大,回退到 <strong>2</strong> 降一层</li>
+<li>L0: 2 -&gt; 3                                     L0 层 <strong>2</strong> 找到 <strong>3</strong> 期望节点</li>
+</ol>
+<p>整个查找过程算法的时间复杂度为 $O(lg(n))$.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/26/数据结构之Hash/" rel="next" title="你确定不来了解一下Redis中 Hash的原理吗">
+                <i class="fa fa-chevron-left"></i> 你确定不来了解一下Redis中 Hash的原理吗
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Yyang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本介绍"><span class="nav-number">2.</span> <span class="nav-text">基本介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">2.1.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zset"><span class="nav-number">2.2.</span> <span class="nav-text">zset</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部原理"><span class="nav-number">3.</span> <span class="nav-text">内部原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#skiplist-跳跃表"><span class="nav-number">3.1.</span> <span class="nav-text">skiplist 跳跃表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查找"><span class="nav-number">3.1.1.</span> <span class="nav-text">查找</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yyang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

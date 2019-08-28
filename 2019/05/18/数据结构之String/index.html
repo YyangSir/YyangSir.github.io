@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言Redis 有五种基础数据结构:string,list,set,zset,hash.其中 string是最最最简单的也是最常用的.这个数据类型虽然简单但是内部的结构设计却很是精致. 基本介绍相比于 Java,在 Redis 中 string 是可以修改的,是动态字符串(Simple Dynamic String 简称 SDS)他的内部结构更像是一个 ArrayList,维护一个字节数组并预分配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你确定不来了解下 Redis 字符串的原理吗">
+<meta property="og:url" content="http://yoursite.com/2019/05/18/数据结构之String/index.html">
+<meta property="og:site_name" content="杨洋的个人博客">
+<meta property="og:description" content="前言Redis 有五种基础数据结构:string,list,set,zset,hash.其中 string是最最最简单的也是最常用的.这个数据类型虽然简单但是内部的结构设计却很是精致. 基本介绍相比于 Java,在 Redis 中 string 是可以修改的,是动态字符串(Simple Dynamic String 简称 SDS)他的内部结构更像是一个 ArrayList,维护一个字节数组并预分配">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1g36r2vteq6j31ta0cy3yn.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1g371z6nzm4j308w0ccwee.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1g3odkgky6rj30dk0dqa9z.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1g3dvletuj0j31fw0a80t1.jpg">
+<meta property="og:updated_time" content="2019-08-28T14:31:57.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你确定不来了解下 Redis 字符串的原理吗">
+<meta name="twitter:description" content="前言Redis 有五种基础数据结构:string,list,set,zset,hash.其中 string是最最最简单的也是最常用的.这个数据类型虽然简单但是内部的结构设计却很是精致. 基本介绍相比于 Java,在 Redis 中 string 是可以修改的,是动态字符串(Simple Dynamic String 简称 SDS)他的内部结构更像是一个 ArrayList,维护一个字节数组并预分配">
+<meta name="twitter:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1g36r2vteq6j31ta0cy3yn.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/18/数据结构之String/">
+
+
+
+
+
+  <title>你确定不来了解下 Redis 字符串的原理吗 | 杨洋的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨洋的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/数据结构之String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">你确定不来了解下 Redis 字符串的原理吗</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-18T13:00:08+08:00">
+                2019-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Redis 有五种基础数据结构:string,list,set,zset,hash.其中 string是最最最简单的也是最常用的.这个数据类型虽然简单但是内部的结构设计却很是精致.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>相比于 Java,在 Redis 中 string 是可以修改的,是动态字符串(Simple Dynamic String 简称 SDS)他的内部结构更像是一个 ArrayList,维护一个字节数组并预分配冗余空间以减少内存的频繁分配.当字符串的长度小于 1MB时,每次扩容都是加倍现有的空间,如果字符串长度超过 1MB 时,每次扩容时只会扩展 1MB 的空间.</p>
+<p>ps:字符串长度为最大长度 512MB.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; set name test</span><br><span class="line">OK</span><br><span class="line">&gt; get name</span><br><span class="line">&quot;test&quot;</span><br><span class="line">&gt; mset name1 test1 name2 test2</span><br><span class="line">OK</span><br><span class="line">&gt; mget name1 name2</span><br><span class="line">1) &quot;test1&quot;</span><br><span class="line">2) &quot;test2&quot;</span><br><span class="line">&gt; del name</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>上面是字符串的基本操作 命令mset 和 mget 可以对多个字符串读写 节省网络开销</p>
+<p>不仅如此redis 的字符串还可以用来储存整数(更不像Java 的字符串了),并且可以自增操作.字符串保存整数类型的的范围在 $-2^{64}$至$2^{64}-1$</p>
+<p>如果保存的数大于这个取值范围就会变成普通字符类型 无法自增操作.这将由字符串编码格式决定.</p>
+<p>字符串由多个字节组成,每个字节有 8bit.这样的数据结构还可以当做 bitmap 去使用.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; set foo 1</span><br><span class="line">OK</span><br><span class="line">&gt; get foo </span><br><span class="line">&quot;1&quot;</span><br><span class="line">&gt; incr foo</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; get foo</span><br><span class="line">&quot;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><h3 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h3><p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g36r2vteq6j31ta0cy3yn.jpg" alt></p>
+<p>上图所示为字符串的基本结构,其中 content 里面保存的是字符串内容,和 c 一样用 0x\0作为结束字符.这个结束字符不会被计算len 中.代码如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SDS</span>&#123;</span></span><br><span class="line">    T capacity;		<span class="comment">//数组容量</span></span><br><span class="line">    T len;			<span class="comment">//实际长度</span></span><br><span class="line">    byte flages;	<span class="comment">//标志位,低三位表示类型</span></span><br><span class="line">    byte[] content;	<span class="comment">//数组内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 capacity和len 都是泛型,为什么不直接使用 int 呢?因为 Redis 内部做了很多优化,为了减少内存的使用不同长度的字符串会使用不同的数据类型去表示.并且在创建字符串的时候 len 会和 capacity 一样大,没有冗余的空间,因为修改字符串的场景很少.(Redis 真的将内存优化到了极致)</p>
+<h3 id="编码格式"><a href="#编码格式" class="headerlink" title="编码格式"></a>编码格式</h3><p>Redis 字符串编码格式有这么几种:int 编码、embstr编码和raw 编码 下面就详细介绍下这几种编码的区别.</p>
+<p>在这之前先要说说RedisObject. Redis 的对象头,所有的 Redis 对象都有下面这个头部结构.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">RedisObject</span>&#123;</span></span><br><span class="line">    int4 type;		<span class="comment">//数据类型 5 种</span></span><br><span class="line">    int4 encoding;	<span class="comment">//键值内部编码格式 int 或 embstr 等等</span></span><br><span class="line">    int24 lru;		<span class="comment">// 当内存超限时采用LRU算法清除内存中的对象</span></span><br><span class="line">    </span><br><span class="line">    int32 refcount;	<span class="comment">//改键值被引用的数量</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;		<span class="comment">//对象内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="int-编码"><a href="#int-编码" class="headerlink" title="int 编码"></a>int 编码</h4><p>当储存的值是64 位有符号整数类型的时候将会采用 <strong>int</strong>  编码,这时可以使用键值自增操作.Redis 在启动时会建立1w 个<code>redisObject</code>共享对象下文会讲到,值在[0,1000)之间.如果存入整数的值在[0,1000)中Redis将不会创建新的对象,而是直接指向共享对象,键值不额外占用空间.</p>
+<p>使用 object encoding命令可以查看编码格式 使用 debug object命令可以查看更多信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; set foo 1</span><br><span class="line">OK</span><br><span class="line">&gt; object encoding foo</span><br><span class="line">&quot;int&quot;</span><br><span class="line">&gt; set foo2 1</span><br><span class="line">OK</span><br><span class="line">&gt; debug object foo</span><br><span class="line">Value at:0x7f44b020aca0 refcount:2147483647 encoding:int serializedlength:2 lru:14691591 lru_seconds_idle:72588</span><br><span class="line">&gt; debug object foo2</span><br><span class="line">Value at:0x7f44b020aca0 refcount:2147483647 encoding:int serializedlength:2 lru:14691591 lru_seconds_idle:72594</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 foo 和 foo2  都在0x7f44b020aca0这里指向的是同一个对象</p>
+<h4 id="embstr-编码"><a href="#embstr-编码" class="headerlink" title="embstr 编码"></a>embstr 编码</h4><p>当存储的字符串长度较短时(len&lt;=44 字节),Redis将会采用 <strong>embstr</strong> 编码.embstr 即embedded string 嵌入式的字符串.将SDS结构体嵌入RedisObject对象中, 使用 malloc 方法一次分配内存地址是连续的.</p>
+<p>如图所示:</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g371z6nzm4j308w0ccwee.jpg" alt></p>
+<h4 id="raw-编码"><a href="#raw-编码" class="headerlink" title="raw 编码"></a>raw 编码</h4><p>当存储的字符串长度较长时(len&gt;44 字节),Redis 将会采用 <strong>raw</strong> 编码,和 <strong>embstr</strong> 最大的区别就是 RedisObject 和 SDS 不在一起了,内存地址不再连续了.</p>
+<p>如图所示:</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g3odkgky6rj30dk0dqa9z.jpg" alt></p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>为什么字符串会有两种格式 embstr 和格式和 raw分界线是 44 个字节?</p>
+<p>Redis 默认的内存分配器jemalloc分配内存大小的单位是$2^n$次方,为了容纳一个完整的 embstr 对象,最少会分配 32 字节的空间,再长些就是 64 字节,再之后就认为这是一个大字符串不适合用 embstr 存储,而改用 raw 编码了.</p>
+<p>那么问题来了,64 字节的空间字符串长度是多少呢?答案就是 44 字节.</p>
+<p>下图中 content 的长度为 45 字节减去结尾的 0x\0,就剩下 44 字节了.</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g3dvletuj0j31fw0a80t1.jpg" alt></p>
+<p>下章预告 Redis 数据结构之 List.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/20/单例模式最佳实践/" rel="next" title="单例模式最佳实践">
+                <i class="fa fa-chevron-left"></i> 单例模式最佳实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/25/数据结构之List/" rel="prev" title="你确定不来了解一下Redis列表的原理吗">
+                你确定不来了解一下Redis列表的原理吗 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Yyang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本介绍"><span class="nav-number">2.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部原理"><span class="nav-number">3.</span> <span class="nav-text">内部原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本实现"><span class="nav-number">3.1.</span> <span class="nav-text">基本实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码格式"><span class="nav-number">3.2.</span> <span class="nav-text">编码格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#int-编码"><span class="nav-number">3.2.1.</span> <span class="nav-text">int 编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#embstr-编码"><span class="nav-number">3.2.2.</span> <span class="nav-text">embstr 编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#raw-编码"><span class="nav-number">3.2.3.</span> <span class="nav-text">raw 编码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思考"><span class="nav-number">3.3.</span> <span class="nav-text">思考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yyang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

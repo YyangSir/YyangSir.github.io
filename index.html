@@ -1,90 +1,903 @@
 <!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
-  
+
+
 
   
-  <title>杨洋的个人博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="website">
 <meta property="og:title" content="杨洋的个人博客">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="杨洋的个人博客">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="杨洋的个人博客">
-  
-    <link rel="alternate" href="/atom.xml" title="杨洋的个人博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-</html>
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">杨洋的个人博客</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-单例模式最佳实践" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/20/单例模式最佳实践/" class="article-date">
-  <time datetime="2019-04-20T03:27:47.815Z" itemprop="datePublished">2019-04-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/20/单例模式最佳实践/">单例模式最佳实践</a>
-    </h1>
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/">
+
+
+
+
+
+  <title>杨洋的个人博客</title>
   
 
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨洋的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/26/数据结构之zset/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/26/数据结构之zset/" itemprop="url">你确定不来了解下 Redis 跳跃表的原理吗</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-26T14:02:12+08:00">
+                2019-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>单例模式是最简单的设计模式之一,提供了一种创建对象的方式,确保在整个系统中只有一个对象被创建.单例模式解决了频繁创建重复对象的问题节约资源,可以省略创建对象所需要花费的时间,对于一些重量级对象而言这点是很重要的.并且因为不需要频繁创建对象 GC 的压力也会有所减轻.</p>
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本章将介绍 Redis中 set 和 zset的基本使用和内部原理.因为这两种数据结构有很多相似的地方所以把他们放到一章中介绍.并且重点介绍zset 内部一个很重要的数据结构:跳跃表.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>先来看看 set </p>
+<p>Redis 中 set 集合很像Java 中 HashSet,键值对无序、唯一、不为空.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; sadd books Java</span><br><span class="line">(integer 1)</span><br><span class="line">&gt; sadd books Java</span><br><span class="line">(integer 0)				# value 值重复</span><br><span class="line">&gt; sadd books Go</span><br><span class="line">(integer 1)</span><br><span class="line">&gt; smembers books		# 无序</span><br><span class="line">1) &quot;Go&quot;</span><br><span class="line">2) &quot;Java&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p>zset 是 Redis 中最特别的基础数据结构,其他几个都能和 Java 大致对应上.它基本上还是一个 set 但是添加了一个 score 属性去保证有序性.其内部实现为跳跃表稍后将会着重介绍.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; zadd books 1 Java</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zadd books 2 Go</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zadd books 3 Python</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; zrange books 0 -1 	#按 score 有序取出</span><br><span class="line">1) &quot;Java&quot;</span><br><span class="line">2) &quot;Go&quot;</span><br><span class="line">3) &quot;Python&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在 zset 中 score 的类型为 double 所以有时会出现小数点精度问题.</p>
+<p>当 zset 中最后一个 value 被删除后,这个和 zset 就会被自动删除,内存被回收.</p>
+<h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><p>Redis 的 zset 是个复合结构,是由一个 hash 和 skiplist 组成的,其中 hash 用来保存 value 和 score 对应关系.skiplist 用来给 score 排序.关于hash 的内部实现请参阅之前的一篇文章:《你确定不来了解一下Redis中 Hash的原理吗》,在这里我们着重介绍 skiplist 的实现.</p>
+<h3 id="skiplist-跳跃表"><a href="#skiplist-跳跃表" class="headerlink" title="skiplist 跳跃表"></a>skiplist 跳跃表</h3><p>因为zset需要高效的插入和删除,所以底层不适合使用数组实现,需要使用链表的结构.当插入新元素时需要根据 score插入到链表合适的位置,保证链表的有序性.高效的办法是通过二分查找去找到插入点.</p>
+<p>那么问题就来了,二分查找的对象必须是有序数组,只有数组支持快速定位,链表做不到该怎么办呢?这时,就该跳跃表出场了.</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g4r58fmf4kj31bs0tcmxs.jpg" alt></p>
+<p>如图所示,跳跃表在链表的基础上加入了层级L0~L3的概念,Redis 的跳跃表共有 64 层,可容纳 $2^{64}$ 个元素.每个元素的层级是随机分配的,分配 L0 的概率是 100%,就是说每个元素至少会有一层.分配L1 的概率是 50%,分配 L2 的概率是 25%,往上以此类推.</p>
+<p>每个 kv 对应的结构为zslnode.kv 之间使用指针形成有序的双向链表.同一层的 kv 会使用指针串起来.每层元素的遍历都是从跳跃表的头指针 kv header 出发.</p>
+<p>header 的结构也是 zslnode,当中 value 为 null,score 为 Double.MIN_VALUE排在最前面.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zslnode</span>&#123;</span></span><br><span class="line">    <span class="built_in">string</span> value;</span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line">    zslnode*[] forwards;	<span class="comment">//多层连接的指针</span></span><br><span class="line">    zslnode* backward;		<span class="comment">//回溯指针</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zsl</span>&#123;</span></span><br><span class="line">    zslnode* header;			<span class="comment">//跳跃表头指针</span></span><br><span class="line">    <span class="keyword">int</span> maxLevel;				<span class="comment">//当前节点的最高层</span></span><br><span class="line">    <span class="built_in">map</span>&lt;String,zslnode*&gt; ht;	<span class="comment">//hash 中的键值对</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h4><p>介绍完 skiplist的数据结构后,我们来具体看下skiplist 是怎样快速定位元素的.</p>
+<p>在上图中,假设我们要查找 <strong>3</strong> 这个节点.skiplist 会从 header 的顶层出发遍历搜索找到第一个比目标元素小的开始降一层,直到降到最底层找到 <strong>3</strong>这个节点,搜索路径为:</p>
+<ol>
+<li>L3:header -&gt; 4 -&gt; header         L3 层header找到 <strong>4</strong>比 <strong>3</strong> 大,回退到 header 同时降一层</li>
+<li>L2:header -&gt; 2 -&gt; 4 -&gt; 2            L2层header 找到 <strong>2</strong> 比 <strong>3</strong> 小,继续遍历找到 <strong>4</strong>,回退到 <strong>2</strong> 同时降一层</li>
+<li>L1: 2 -&gt; 4 -&gt;2                              L1 层 <strong>2</strong> 找到 <strong>4</strong> 比 <strong>3</strong> 大,回退到 <strong>2</strong> 降一层</li>
+<li>L0: 2 -&gt; 3                                     L0 层 <strong>2</strong> 找到 <strong>3</strong> 期望节点</li>
+</ol>
+<p>整个查找过程算法的时间复杂度为 $O(lg(n))$.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/26/数据结构之Hash/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/26/数据结构之Hash/" itemprop="url">你确定不来了解一下Redis中 Hash的原理吗</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-26T14:01:51+08:00">
+                2019-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本章接着上一节继续介绍 Redis 的基础数据结构中的Hash字典.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>Hash 也可以用来存储用户信息,和 String 不同的是 Hash 可以对用户信息的每个字段单独存储,String 则需要序列化用户的所有字段后存储.并且 String 需要以整个字符串的形式获取用户,而 hash可以只获取部分数据,从而节约网络流量.不过 hash 内存占用要大于 String,这是 hash 的缺点.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; hset books java &quot;Effective java&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hset books golang &quot;concurrency in go&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hget books java</span><br><span class="line">&quot;Effective java&quot;</span><br><span class="line">&gt; hset user age 17</span><br><span class="line">(integer) 1</span><br><span class="line">&gt;hincrby user age 1	#单个 key 可以进行计数 和 incr 命令基本一致</span><br><span class="line">(integer) 18</span><br></pre></td></tr></table></figure>
+
+<p>Redis 中的 Hash和 Java的 HashMap 更加相似,都是数组+链表的结构.当发生 hash 碰撞时将会把元素追加到链表上.值得注意的是在 Redis 的 Hash 中 value 只能是字符串.</p>
+<h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><p>看完基本介绍之后,我们先来了解下 hash 的内部结构.第一维是数组,第二维是链表.组成一个 hashtable.</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1g3u45enlpzj314i0hejrf.jpg" alt></p>
+<p>部分源码:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dictht</span> &#123;</span></span><br><span class="line">    dictEntry **table;	<span class="comment">//entry 数组</span></span><br><span class="line">    <span class="keyword">long</span> size;			<span class="comment">//数组长度</span></span><br><span class="line">    <span class="keyword">long</span> used			<span class="comment">//数组中的元素个数</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span> *key;			<span class="comment">//hash 的 key</span></span><br><span class="line">    <span class="keyword">void</span> *val;			<span class="comment">//hash 的 value</span></span><br><span class="line">    dictEntry *next;	<span class="comment">//下一个dictEntry 链表结构</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Java 中 HashMap 扩容是个很耗时的操作,需要去申请新的数组,为了追求高性能,Redis 采用了<code>渐进式 rehash</code> 策略.这也是 hash 中最重要的部分.</p>
+<h3 id="渐进式-rehash"><a href="#渐进式-rehash" class="headerlink" title="渐进式 rehash"></a>渐进式 rehash</h3><p>在 hash 的内部包含了两个hashtable,一般情况下只是用一个.如图所示:</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g3u5kb4qdfj30cg0b4t8k.jpg" alt></p>
+<p>在扩容的时候 rehash 策略会保留新旧两个 hashtable 结构,查询时也会同时查询两个 hashtable.Redis会将旧 hashtable 中的内容一点一点的迁移到新的 hashtable 中,当迁移完成时,就会用新的  hashtable 取代之前的.当 hashtable 移除了最后一个元素之后,这个数据结构将会被删除.如图所示:</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1g3u5mqw5txj30x00boq30.jpg" alt></p>
+<p>数据搬迁的操作放在 hash 的后续指令中,也就是来自客户端对 hash 的指令操作.一旦客户端后续没有指令操作这个 hash.Redis就会使用定时任务对数据主动搬迁.</p>
+<p>正常情况下,当 hashtable 中元素的个数等于数组的长度时,就会开始扩容,扩容的新数组是原数组大小的 2 倍.如果 Redis 正在做 bgsave(持久化) 时,可能不会去扩容,因为要减少内存页的过多分离(Copy On Write).但是如果 hashtable 已经非常满了,元素的个数达到了数组长度的 5 倍时,Redis 会强制扩容.</p>
+<p>当hashtable 中元素逐渐变少时,Redis 会进行缩容来减少空间占用,并且缩容不会受 bgsave 的影响,缩容条件是元素个数少于数组长度的 10%.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/25/数据结构之List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/25/数据结构之List/" itemprop="url">你确定不来了解一下Redis列表的原理吗</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-25T20:42:02+08:00">
+                2019-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一章中我们介绍了 String 的一些内部原理,在这一章中我们再来讨论在五种数据结构中 List 的基本使用和一些内部实现.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>Redis的List 呢相当于 Java 中的 LinkedList,也是双向链表.具有一些和 LinkedList 同样的特征,比如插入和删除一条很快,时间复杂度为 O(1),获取头结点和尾节点也很快,时间复杂度也为 O(1),随机读取则相对较慢时间复杂度为 O(n).常用作消息队列.</p>
+<p><strong>当做队列使用时,遵循先进先出原则:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; rpush books python java golang</span><br><span class="line">(integer) 3</span><br><span class="line">&gt; lpop books</span><br><span class="line">&quot;python&quot;</span><br><span class="line">&gt; lpop books</span><br><span class="line">&quot;java&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>当做栈使用时,遵循先进后出原则:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; rpush books python java golang</span><br><span class="line">(integer) 3</span><br><span class="line">&gt; rpop books</span><br><span class="line">&quot;golang&quot;</span><br><span class="line">&gt; rpop books</span><br><span class="line">&quot;java&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>同时还可以通过 get(index)的方法获取:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; rpush books python java golang</span><br><span class="line">(integer) 3</span><br><span class="line">&gt; lindex books 0</span><br><span class="line">&quot;python&quot;</span><br><span class="line">&gt; lindex books -1</span><br><span class="line">&quot;golang&quot;</span><br></pre></td></tr></table></figure>
+
+<p>index从 0 开始,可以为负数 -1 代表倒数第一个元素</p>
+<h2 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h2><p>上述部分我们把 Redis 中的 List当做 Java 中的 LinkedList 操作,因为有很多相同的部分.但实际上在 Redis 中链表的内部实现可不是一个简单的双向链表.在数据量较少的时候它的底层存储结构为一块连续内存,称之为<code>ziplist</code>(压缩列表).当数据量较多的时候将会变成链表的结构.后来因为链表需要 prev 和 next 两个指针占用内存很多,改用 ziplist+链表的混合结构,称之为 <code>quicklist</code>(快速链表).<strong>在新的版本中 Redis 链表统一使用 quicklist来存储</strong>.下面我们就来详细介绍这种数据结构.</p>
+<h3 id="ziplist-压缩列表"><a href="#ziplist-压缩列表" class="headerlink" title="ziplist 压缩列表"></a>ziplist 压缩列表</h3><p>先来看看 ziplist 的数据结构:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ziplist</span>&lt;T&gt;&#123;</span></span><br><span class="line">    int32 zlbytes;			<span class="comment">//压缩列表占用字节数</span></span><br><span class="line">    int32 zltail_offset;	<span class="comment">//最后一个元素距离起始位置的偏移量,用于快速定位到最后一个节点</span></span><br><span class="line">    int16 zllength;			<span class="comment">//元素个数</span></span><br><span class="line">    T[] entries;			<span class="comment">//元素内容</span></span><br><span class="line">    int8 zlend;				<span class="comment">//结束位 0xFF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如图所示:</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1g3eprokj8gj31ke0co74g.jpg" alt></p>
+<p>有了 ztail_offset 就可以快速的定位到最后一个节点,这样就可以倒序遍历了.也就是说 ziplist支持双向遍历.</p>
+<p>下面再来看下 entry 的内部实现:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">entry</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span>&lt;var&gt; prevlen;			<span class="comment">//前一个 entry 的长度</span></span><br><span class="line">    <span class="keyword">int</span>&lt;var&gt; encoding;			<span class="comment">//元素类型编码</span></span><br><span class="line">    optional byte[] content;	<span class="comment">//元素内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 ziplist 倒序遍历的时候,就是通过这个pervlen定位到前一个元素位置的.</p>
+<p>encoding 保存了 content 的编码类型.</p>
+<p>content 则是保存的元素内容,它是optional 类型表示是这个字段是可选的.当content 是很小的整数时,他会内联到 encoding 字段的尾部.</p>
+<h3 id="quicklist-快速列表"><a href="#quicklist-快速列表" class="headerlink" title="quicklist 快速列表"></a>quicklist 快速列表</h3><p>quicklist 是 ziplist 和链表的混合体.下面是 quicklist和 node 的部分数据结构:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">quicklist</span>&#123;</span></span><br><span class="line">    quicklistNode* head;	<span class="comment">//指向头结点</span></span><br><span class="line">    quicklistNode* tail;	<span class="comment">//指向尾节点</span></span><br><span class="line">    <span class="keyword">long</span> count;				<span class="comment">//元素总数</span></span><br><span class="line">    <span class="keyword">int</span> nodes;				<span class="comment">//quicklistNode节点的个数</span></span><br><span class="line">    <span class="keyword">int</span> compressDepth;		<span class="comment">//压缩算法深度</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了节约空间 Redis 还会对 ziplist 使用 LZF 算法进行压缩,可以选择压缩深度.我们待会在说.</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1g3m00p712rj30uu0iuq30.jpg" alt></p>
+<p>如上图所示,quicklist含有两个 quicklistNode 代表头结点和尾节点,其中每个head 和 tail 之间是双向链表.每个quicklistNode指向一个 ziplist.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">quicklistNode</span>&#123;</span></span><br><span class="line">    quicklistNode* prev;	<span class="comment">//前一个节点</span></span><br><span class="line">    quicklistNode* next;	<span class="comment">//后一个节点</span></span><br><span class="line">    ziplist* zl;			<span class="comment">//压缩列表</span></span><br><span class="line">    int32 size;				<span class="comment">//ziplist大小</span></span><br><span class="line">    int16 count;			<span class="comment">//ziplist 中元素数量</span></span><br><span class="line">    int2 encoding;			<span class="comment">//编码形式 存储 ziplist 还是进行 LZF 压缩储存</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 quicklist 中每个 ziplist 默认大小是 8kb,超出这个字节就会增加一个 ziplist.这个默认大小是可配置的,由<code>list-max-ziplist-size</code>决定.</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g3m19ai6ttj31280ey75n.jpg" alt></p>
+<p>上面说到 ziplist 可以使用 LZF 算法压缩,通过<code>list-compress-depth</code>配置.默认情况下quicklist 的压缩深度是 0,也就是不压缩.配置为 1 的话代表从头/尾开始第 1 个ziplsit 进行压缩.</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g3m0ndypgsj313g0g075s.jpg" alt></p>
+<p>下章预告,Redis 数据结构之 Hash</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/数据结构之String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/18/数据结构之String/" itemprop="url">你确定不来了解下 Redis 字符串的原理吗</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-18T13:00:08+08:00">
+                2019-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Redis 有五种基础数据结构:string,list,set,zset,hash.其中 string是最最最简单的也是最常用的.这个数据类型虽然简单但是内部的结构设计却很是精致.</p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>相比于 Java,在 Redis 中 string 是可以修改的,是动态字符串(Simple Dynamic String 简称 SDS)他的内部结构更像是一个 ArrayList,维护一个字节数组并预分配冗余空间以减少内存的频繁分配.当字符串的长度小于 1MB时,每次扩容都是加倍现有的空间,如果字符串长度超过 1MB 时,每次扩容时只会扩展 1MB 的空间.</p>
+<p>ps:字符串长度为最大长度 512MB.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; set name test</span><br><span class="line">OK</span><br><span class="line">&gt; get name</span><br><span class="line">&quot;test&quot;</span><br><span class="line">&gt; mset name1 test1 name2 test2</span><br><span class="line">OK</span><br><span class="line">&gt; mget name1 name2</span><br><span class="line">1) &quot;test1&quot;</span><br><span class="line">2) &quot;test2&quot;</span><br><span class="line">&gt; del name</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>上面是字符串的基本操作 命令mset 和 mget 可以对多个字符串读写 节省网络开销</p>
+<p>不仅如此redis 的字符串还可以用来储存整数(更不像Java 的字符串了),并且可以自增操作.字符串保存整数类型的的范围在 $-2^{64}$至$2^{64}-1$</p>
+<p>如果保存的数大于这个取值范围就会变成普通字符类型 无法自增操作.这将由字符串编码格式决定.</p>
+<p>字符串由多个字节组成,每个字节有 8bit.这样的数据结构还可以当做 bitmap 去使用.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; set foo 1</span><br><span class="line">OK</span><br><span class="line">&gt; get foo </span><br><span class="line">&quot;1&quot;</span><br><span class="line">&gt; incr foo</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; get foo</span><br><span class="line">&quot;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><h3 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h3><p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g36r2vteq6j31ta0cy3yn.jpg" alt></p>
+<p>上图所示为字符串的基本结构,其中 content 里面保存的是字符串内容,和 c 一样用 0x\0作为结束字符.这个结束字符不会被计算len 中.代码如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SDS</span>&#123;</span></span><br><span class="line">    T capacity;		<span class="comment">//数组容量</span></span><br><span class="line">    T len;			<span class="comment">//实际长度</span></span><br><span class="line">    byte flages;	<span class="comment">//标志位,低三位表示类型</span></span><br><span class="line">    byte[] content;	<span class="comment">//数组内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 capacity和len 都是泛型,为什么不直接使用 int 呢?因为 Redis 内部做了很多优化,为了减少内存的使用不同长度的字符串会使用不同的数据类型去表示.并且在创建字符串的时候 len 会和 capacity 一样大,没有冗余的空间,因为修改字符串的场景很少.(Redis 真的将内存优化到了极致)</p>
+<h3 id="编码格式"><a href="#编码格式" class="headerlink" title="编码格式"></a>编码格式</h3><p>Redis 字符串编码格式有这么几种:int 编码、embstr编码和raw 编码 下面就详细介绍下这几种编码的区别.</p>
+<p>在这之前先要说说RedisObject. Redis 的对象头,所有的 Redis 对象都有下面这个头部结构.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">RedisObject</span>&#123;</span></span><br><span class="line">    int4 type;		<span class="comment">//数据类型 5 种</span></span><br><span class="line">    int4 encoding;	<span class="comment">//键值内部编码格式 int 或 embstr 等等</span></span><br><span class="line">    int24 lru;		<span class="comment">// 当内存超限时采用LRU算法清除内存中的对象</span></span><br><span class="line">    </span><br><span class="line">    int32 refcount;	<span class="comment">//改键值被引用的数量</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;		<span class="comment">//对象内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="int-编码"><a href="#int-编码" class="headerlink" title="int 编码"></a>int 编码</h4><p>当储存的值是64 位有符号整数类型的时候将会采用 <strong>int</strong>  编码,这时可以使用键值自增操作.Redis 在启动时会建立1w 个<code>redisObject</code>共享对象下文会讲到,值在[0,1000)之间.如果存入整数的值在[0,1000)中Redis将不会创建新的对象,而是直接指向共享对象,键值不额外占用空间.</p>
+<p>使用 object encoding命令可以查看编码格式 使用 debug object命令可以查看更多信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; set foo 1</span><br><span class="line">OK</span><br><span class="line">&gt; object encoding foo</span><br><span class="line">&quot;int&quot;</span><br><span class="line">&gt; set foo2 1</span><br><span class="line">OK</span><br><span class="line">&gt; debug object foo</span><br><span class="line">Value at:0x7f44b020aca0 refcount:2147483647 encoding:int serializedlength:2 lru:14691591 lru_seconds_idle:72588</span><br><span class="line">&gt; debug object foo2</span><br><span class="line">Value at:0x7f44b020aca0 refcount:2147483647 encoding:int serializedlength:2 lru:14691591 lru_seconds_idle:72594</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 foo 和 foo2  都在0x7f44b020aca0这里指向的是同一个对象</p>
+<h4 id="embstr-编码"><a href="#embstr-编码" class="headerlink" title="embstr 编码"></a>embstr 编码</h4><p>当存储的字符串长度较短时(len&lt;=44 字节),Redis将会采用 <strong>embstr</strong> 编码.embstr 即embedded string 嵌入式的字符串.将SDS结构体嵌入RedisObject对象中, 使用 malloc 方法一次分配内存地址是连续的.</p>
+<p>如图所示:</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g371z6nzm4j308w0ccwee.jpg" alt></p>
+<h4 id="raw-编码"><a href="#raw-编码" class="headerlink" title="raw 编码"></a>raw 编码</h4><p>当存储的字符串长度较长时(len&gt;44 字节),Redis 将会采用 <strong>raw</strong> 编码,和 <strong>embstr</strong> 最大的区别就是 RedisObject 和 SDS 不在一起了,内存地址不再连续了.</p>
+<p>如图所示:</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g3odkgky6rj30dk0dqa9z.jpg" alt></p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>为什么字符串会有两种格式 embstr 和格式和 raw分界线是 44 个字节?</p>
+<p>Redis 默认的内存分配器jemalloc分配内存大小的单位是$2^n$次方,为了容纳一个完整的 embstr 对象,最少会分配 32 字节的空间,再长些就是 64 字节,再之后就认为这是一个大字符串不适合用 embstr 存储,而改用 raw 编码了.</p>
+<p>那么问题来了,64 字节的空间字符串长度是多少呢?答案就是 44 字节.</p>
+<p>下图中 content 的长度为 45 字节减去结尾的 0x\0,就剩下 44 字节了.</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g3dvletuj0j31fw0a80t1.jpg" alt></p>
+<p>下章预告 Redis 数据结构之 List.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/20/单例模式最佳实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/20/单例模式最佳实践/" itemprop="url">单例模式最佳实践</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-20T11:27:47+08:00">
+                2019-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>单例模式是最简单的设计模式之一,提供了一种创建对象的方式,确保在整个系统中只有一个对象被创建.单例模式解决了频繁创建重复对象的问题节约资源,可以省略创建对象所需要花费的时间,对于一些重量级对象而言这点是很重要的.并且因为不需要频繁创建对象 GC 的压力也会有所减轻.</p>
 <h2 id="单例模式的一些实现方式"><a href="#单例模式的一些实现方式" class="headerlink" title="单例模式的一些实现方式"></a>单例模式的一些实现方式</h2><p>通常来说在 Java 中的单例模式分为饿汉式和懒汉式,而且单例类需要一个 private 的构造函数防止被其他代码实例化.下面来具体说一下java 中单例模式的实现.</p>
 <h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">  	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance =<span class="keyword">new</span> Singleton();</span><br><span class="line">    <span class="comment">//私有化构造方法</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -117,91 +930,307 @@
 </blockquote>
 <p>简单到不能再简单了啊.jvm 在加载枚举类的时候会使用loadClass方法使用同步代码块解决线程安全问题.使用 enum 的单例模式还能避免反序列化破坏单例并且不能被反射攻击.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/单例模式最佳实践/" data-id="cjzvb5i3600017r3daqeswil9" class="article-share-link">Share</a>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
       
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+  </section>
 
   
 
 
-</section>
+          </div>
+          
+
+
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
-
-  
+  <aside id="sidebar" class="sidebar">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/04/20/单例模式最佳实践/">单例模式最佳实践</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+    <div class="sidebar-inner">
 
-  
-</aside>
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Yyang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yyang</span>
+
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2019 Yyang<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
+    
 
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
