@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta name="description" content="为了保证高可用,Redis 的主从同步是大多数公司都会做的方案,当 master 挂掉的时候让 slave 去接管,保证服务的继续.在 Redis 重启需要恢复数据时则需要将部分差异数据同步过来.下面将简单介绍这个过程. 增量同步Reids 同步的指令流,主节点会将修改性的指令记录在本地的内存 buffer中,然后异步将 buffer 中的指令同步到从节点,从节点会记录一个偏移量,向主节点反馈自己">
 <meta name="keywords" content="杨洋的个人博客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis 的持久化">
-<meta property="og:url" content="http://yoursite.com/2019/08/14/redis/Redis 的持久化/index.html">
+<meta property="og:title" content="Redis 主从同步">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/redis/Redis 主从同步/index.html">
 <meta property="og:site_name" content="杨洋的个人博客">
-<meta property="og:description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta property="og:description" content="为了保证高可用,Redis 的主从同步是大多数公司都会做的方案,当 master 挂掉的时候让 slave 去接管,保证服务的继续.在 Redis 重启需要恢复数据时则需要将部分差异数据同步过来.下面将简单介绍这个过程. 增量同步Reids 同步的指令流,主节点会将修改性的指令记录在本地的内存 buffer中,然后异步将 buffer 中的指令同步到从节点,从节点会记录一个偏移量,向主节点反馈自己">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-22T08:38:46.319Z">
+<meta property="og:updated_time" content="2019-11-04T13:36:32.563Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis 的持久化">
-<meta name="twitter:description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta name="twitter:title" content="Redis 主从同步">
+<meta name="twitter:description" content="为了保证高可用,Redis 的主从同步是大多数公司都会做的方案,当 master 挂掉的时候让 slave 去接管,保证服务的继续.在 Redis 重启需要恢复数据时则需要将部分差异数据同步过来.下面将简单介绍这个过程. 增量同步Reids 同步的指令流,主节点会将修改性的指令记录在本地的内存 buffer中,然后异步将 buffer 中的指令同步到从节点,从节点会记录一个偏移量,向主节点反馈自己">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/14/redis/Redis 的持久化/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/redis/Redis 主从同步/">
 
 
 
 
 
-  <title>Redis 的持久化 | 杨洋的个人博客</title>
+  <title>Redis 主从同步 | 杨洋的个人博客</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/redis/Redis 的持久化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/redis/Redis 主从同步/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yyang">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis 的持久化</h1>
+          <h1 class="post-title" itemprop="name headline">Redis 主从同步</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-14T22:36:50+08:00">
-                2019-08-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T17:12:06+08:00">
+                2019-10-13
               </time>
             
 
@@ -300,25 +300,12 @@
       
 
       
-        <p>Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环.</p>
-<h3 id="RDB方案"><a href="#RDB方案" class="headerlink" title="RDB方案"></a>RDB方案</h3><p>Redis 提供的<code>rdb</code>方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令<code>save</code>触发,也可以通过配置文件定时触发.<strong>执行命令持久化时在数据保存完成之前会一直阻塞 redis</strong>.</p>
-<p>在持久化的过程中 Redis内部会执行<code>bgsave</code> 命令去<code>fork</code>一个子进程(<strong>这个过程会阻塞 Redis</strong>),由子进程将数据写到<code>rdb</code>文件中.父进程和子进程共享数据段,父进程还可以继续对外提供读写服务.当数据有修改时父进程会将数据拷贝过来.而子进程的数据没有变化,这个过程被称为<strong>Copy On Write</strong>简称 COW.因此持久化的数据在子进程创建后就不会改变了,所以这种方式也被称为”快照”.显然这样会丢失部分数据.</p>
-<h3 id="AOF-方案"><a href="#AOF-方案" class="headerlink" title="AOF 方案"></a>AOF 方案</h3><p><code>aof</code> 方案相对于 <code>rdb</code> 有着更好的实时性.存储的是 Redis 服务器的顺序写指令.<strong>也就是记录增删改指令,读指令不会记录</strong>,在收到指令后,会先执行指令然后将指令保存到 <code>aof</code> 日志中.具体执行步骤如下:</p>
-<ol>
-<li>服务器执行命令</li>
-<li>将命令追加到 aof 的内存缓存区</li>
-<li>调用 <code>fsync</code> 函数将缓冲区的函数写入到文件</li>
-</ol>
-<p>其中第3 步的操作会很慢,因为涉及到了 IO 操作,所以并不是每条指令执行过后都会执行步骤 3.而是每秒调用 一次<code>fsync</code>函数将缓存刷到磁盘文件,这个时间可以通过配置文件设置.</p>
-<p>随着 Redis 的运行<code>aof</code>日志将会越来越大,服务器将会对日志进行重写,以减小文件大小.具体执行步骤如下:</p>
-<ol>
-<li>先<code>fork</code>一个子进程</li>
-<li>遍历扫描 Redis 数据库</li>
-<li>根据键值类型进行重写,序列化到一个新的<code>aof</code>日志文件中</li>
-<li>序列化完毕后再将这个过程中发生增量的指令写入</li>
-<li>使用新的日志文件替换原先的日志文件</li>
-</ol>
-<h3 id="混合持久化方案"><a href="#混合持久化方案" class="headerlink" title="混合持久化方案"></a>混合持久化方案</h3><p>很明显 <code>aof</code> 方案要比 <code>rdb</code> 好得多,因为<code>rdb</code>会丢失大量数据.但是相同数据量的情况下 <code>aof</code>文件会比 <code>rdb</code>大得多,数据恢复起来也要慢的多.为了解决这个问题,在 <strong>Redis 4.0</strong>之后出现一个一种混合持久化的方式.使用<code>rdb</code>全量备份数据,然后使用<code>aof</code>备份那些生成”快照”之后增加的数据.</p>
+        <p>为了保证高可用,Redis 的主从同步是大多数公司都会做的方案,当 <code>master</code> 挂掉的时候让 <code>slave</code> 去接管,保证服务的继续.在 Redis 重启需要恢复数据时则需要将部分差异数据同步过来.下面将简单介绍这个过程.</p>
+<h3 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h3><p>Reids 同步的指令流,主节点会将修改性的指令记录在本地的内存 <code>buffer</code>中,然后异步将 <code>buffer</code> 中的指令同步到从节点,从节点会记录一个偏移量,向主节点反馈自己同步到哪里了.</p>
+<p>因为<strong>内存 buffer 是有限的</strong>,所以主节点不会把指令都记录在内存中.而是保留一个定长数组,如果内存 <code>buffer</code>满了就会<strong>从头开始覆盖前面的内容</strong>造成数据不一致</p>
+<h3 id="快照同步"><a href="#快照同步" class="headerlink" title="快照同步"></a>快照同步</h3><p>快照同步非常消耗资源.他首先在主节点上进行 <code>bgsave</code>操作,将当前内存的数据全部保存到磁盘文件中,然后将磁盘文件传送给从节点.从节点将之前数据全部清空,然后加载快照中的数据.加载完毕后通知主节点继续进行增量同步.如果这时需要同步的指令在主节点中被覆盖了,那将会再次发起快照同步,陷入死循环.所以设置一个合适的 <code>buffer</code> 大小是很重要的.</p>
+<p>当有新的节点加入到集群中,必须先进行一次快照同步,之后进行增量同步.</p>
+<h3 id="无盘复制"><a href="#无盘复制" class="headerlink" title="无盘复制"></a>无盘复制</h3><p>在 Redis 2.8.18 版本后,Redis 支持无盘复制.主节点直接通过套接字将快照内容发送给从节点.并且这个过程是一边遍历内存一边将序列化的内容发送到 从节点.</p>
 
       
     </div>
@@ -343,8 +330,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/14/MVCC 多版本并发控制/" rel="next" title="来谈谈MySQL 中Innodb的 MVCC">
-                <i class="fa fa-chevron-left"></i> 来谈谈MySQL 中Innodb的 MVCC
+              <a href="/2019/09/23/RabbitMQ 的可靠性传输/" rel="next" title="RabbitMQ 的可靠性传输">
+                <i class="fa fa-chevron-left"></i> RabbitMQ 的可靠性传输
               </a>
             
           </div>
@@ -353,8 +340,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/23/RabbitMQ 的可靠性传输/" rel="prev" title="RabbitMQ 的可靠性传输">
-                RabbitMQ 的可靠性传输 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/10/15/关于线程池的几个参数/" rel="prev" title="关于线程池ThreadPoolExecutor">
+                关于线程池ThreadPoolExecutor <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -469,7 +456,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB方案"><span class="nav-number">1.</span> <span class="nav-text">RDB方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-方案"><span class="nav-number">2.</span> <span class="nav-text">AOF 方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合持久化方案"><span class="nav-number">3.</span> <span class="nav-text">混合持久化方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#增量同步"><span class="nav-number">1.</span> <span class="nav-text">增量同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快照同步"><span class="nav-number">2.</span> <span class="nav-text">快照同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无盘复制"><span class="nav-number">3.</span> <span class="nav-text">无盘复制</span></a></li></ol></div>
             
 
           </div>

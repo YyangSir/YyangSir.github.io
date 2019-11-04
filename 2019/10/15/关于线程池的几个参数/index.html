@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta name="description" content="在 Executor 中最核心的类是 ThreadPoolExecutor,是线程池的实现类,下面我们将详细介绍有关这个类的构造参数和基本实现. 通用构造参数1234567public ThreadPoolExecutor(int corePoolSize,                         int maximumPoolSize,                         l">
 <meta name="keywords" content="杨洋的个人博客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis 的持久化">
-<meta property="og:url" content="http://yoursite.com/2019/08/14/redis/Redis 的持久化/index.html">
+<meta property="og:title" content="关于线程池ThreadPoolExecutor">
+<meta property="og:url" content="http://yoursite.com/2019/10/15/关于线程池的几个参数/index.html">
 <meta property="og:site_name" content="杨洋的个人博客">
-<meta property="og:description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta property="og:description" content="在 Executor 中最核心的类是 ThreadPoolExecutor,是线程池的实现类,下面我们将详细介绍有关这个类的构造参数和基本实现. 通用构造参数1234567public ThreadPoolExecutor(int corePoolSize,                         int maximumPoolSize,                         l">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-22T08:38:46.319Z">
+<meta property="og:updated_time" content="2019-11-04T13:37:01.578Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis 的持久化">
-<meta name="twitter:description" content="Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环. RDB方案Redis 提供的rdb方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令save触发,也可以通过配置文件定时触发.执行命令持久化时在数据保存完成之前会一直阻塞 redis. 在持久化的过程中 Redis内部会执行bgsave 命令去fork一">
+<meta name="twitter:title" content="关于线程池ThreadPoolExecutor">
+<meta name="twitter:description" content="在 Executor 中最核心的类是 ThreadPoolExecutor,是线程池的实现类,下面我们将详细介绍有关这个类的构造参数和基本实现. 通用构造参数1234567public ThreadPoolExecutor(int corePoolSize,                         int maximumPoolSize,                         l">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/14/redis/Redis 的持久化/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/15/关于线程池的几个参数/">
 
 
 
 
 
-  <title>Redis 的持久化 | 杨洋的个人博客</title>
+  <title>关于线程池ThreadPoolExecutor | 杨洋的个人博客</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/redis/Redis 的持久化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/15/关于线程池的几个参数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yyang">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis 的持久化</h1>
+          <h1 class="post-title" itemprop="name headline">关于线程池ThreadPoolExecutor</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-14T22:36:50+08:00">
-                2019-08-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-15T21:59:32+08:00">
+                2019-10-15
               </time>
             
 
@@ -300,25 +300,73 @@
       
 
       
-        <p>Redis 通常作为缓存使用,当我们需要 Redis 有一定可靠性的时候,就需要对其进行高可用的升级.而数据的持久化是重要的一环.</p>
-<h3 id="RDB方案"><a href="#RDB方案" class="headerlink" title="RDB方案"></a>RDB方案</h3><p>Redis 提供的<code>rdb</code>方式可以将内存中的数据以二进制镜像形式保存在硬盘中.可以通过命令<code>save</code>触发,也可以通过配置文件定时触发.<strong>执行命令持久化时在数据保存完成之前会一直阻塞 redis</strong>.</p>
-<p>在持久化的过程中 Redis内部会执行<code>bgsave</code> 命令去<code>fork</code>一个子进程(<strong>这个过程会阻塞 Redis</strong>),由子进程将数据写到<code>rdb</code>文件中.父进程和子进程共享数据段,父进程还可以继续对外提供读写服务.当数据有修改时父进程会将数据拷贝过来.而子进程的数据没有变化,这个过程被称为<strong>Copy On Write</strong>简称 COW.因此持久化的数据在子进程创建后就不会改变了,所以这种方式也被称为”快照”.显然这样会丢失部分数据.</p>
-<h3 id="AOF-方案"><a href="#AOF-方案" class="headerlink" title="AOF 方案"></a>AOF 方案</h3><p><code>aof</code> 方案相对于 <code>rdb</code> 有着更好的实时性.存储的是 Redis 服务器的顺序写指令.<strong>也就是记录增删改指令,读指令不会记录</strong>,在收到指令后,会先执行指令然后将指令保存到 <code>aof</code> 日志中.具体执行步骤如下:</p>
-<ol>
-<li>服务器执行命令</li>
-<li>将命令追加到 aof 的内存缓存区</li>
-<li>调用 <code>fsync</code> 函数将缓冲区的函数写入到文件</li>
+        <p>在 <code>Executor</code> 中最核心的类是 <code>ThreadPoolExecutor</code>,是线程池的实现类,下面我们将详细介绍有关这个类的构造参数和基本实现.</p>
+<h3 id="通用构造参数"><a href="#通用构造参数" class="headerlink" title="通用构造参数"></a>通用构造参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                         TimUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                         BlockingQueue&lt;Runable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">                         ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                         RejectedExecutionHandler hander)</span></span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>corePoolSize 核心线程池的大小</li>
+<li>maximumPoolSize 最大线程池的大小</li>
+<li>keepAliveTime 线程存活时间</li>
+<li>unit 存活时间的单位</li>
+<li>workQueue暂时保存任务的工作队列</li>
+<li>threadFactory 线程创建工厂</li>
+<li>hander 拒绝策略</li>
+</ul>
+<p>在<code>ThreadPoolExecutor</code>被创建的时候,在线程池里是没有线程的.</p>
+<p>当我们向线程池中提交任务的时候首先会判断<strong>核心线程池(<code>corePoolSize</code>)</strong>中的任务是否都在执行,如果不是则创建新的线程执行任务.</p>
+<p>如果<strong>核心线程池</strong>满了,则判断<strong>工作队列</strong>(<code>workQueue</code>)是否已满,没满则储存在工作队列中.</p>
+<p>如果<strong>工作队列</strong>满了,则判断当前线程数是否等于<strong>最大线程池的大小(<code>maximumPoolSize</code>)</strong>,如果小于则创建一个新的工作线程.否则就交给<strong>拒绝策略</strong>(<code>hander</code>)处理</p>
+<p>这样的执行流程可以让线程池在执行 <code>execute()</code> 方法提交任务时尽可能地避免全局锁.</p>
+<p>在线程池中的工作线程执行完任务后,经过一定的<strong>存活时间(<code>keepAliveTime</code>)</strong>后将会标记为可回收的.当然回收线程会产生额外的消耗.</p>
+<h3 id="几种默认线程池"><a href="#几种默认线程池" class="headerlink" title="几种默认线程池"></a>几种默认线程池</h3><ol>
+<li><p><strong>FixedThreadPool</strong></p>
+<p> 固定线程数的线程池,参数<code>corePoolSize</code>和<code>maximumPoolSize</code>相同,当线程池中线程满后,将后续任务加入队列.队列大小是 Integer.MAX_VALUE</p>
+</li>
+<li><p><strong>SingleThreadExecutor</strong></p>
+<p> 单个线程的线程池,队列大小为Integer.MAX_VALUE</p>
+</li>
+<li><p><strong>CachedThreadPool</strong></p>
+<p> 可缓存的线程池,<code>corePoolSize</code>设置为 0,<code>maximumPoolSize</code>为Integer.MAX_VALUE.队列使用的是没有容量的<code>SynchronousQueue</code>.<code>keepAliveTime</code>为 60,即:空闲线程超过 60s 将会被终止.</p>
+</li>
+<li><p><strong>ScheduledThreadPollExecutor</strong></p>
+<p> 固定长度的线程池,并且以定时或延迟的方式执行任务.</p>
+</li>
 </ol>
-<p>其中第3 步的操作会很慢,因为涉及到了 IO 操作,所以并不是每条指令执行过后都会执行步骤 3.而是每秒调用 一次<code>fsync</code>函数将缓存刷到磁盘文件,这个时间可以通过配置文件设置.</p>
-<p>随着 Redis 的运行<code>aof</code>日志将会越来越大,服务器将会对日志进行重写,以减小文件大小.具体执行步骤如下:</p>
+<h3 id="工作队列-阻塞队列"><a href="#工作队列-阻塞队列" class="headerlink" title="工作队列/阻塞队列"></a>工作队列/阻塞队列</h3><p>在 Java 包中提供了 7 个阻塞队列,分别如下:</p>
 <ol>
-<li>先<code>fork</code>一个子进程</li>
-<li>遍历扫描 Redis 数据库</li>
-<li>根据键值类型进行重写,序列化到一个新的<code>aof</code>日志文件中</li>
-<li>序列化完毕后再将这个过程中发生增量的指令写入</li>
-<li>使用新的日志文件替换原先的日志文件</li>
+<li><p><strong>ArrayBlockingQueue</strong></p>
+<p> 一个有界数组组成的阻塞队列,默认线程以非公平的方式访问队列.即当队列可用时,阻塞的线程都可以争取访问队列的资格.</p>
+</li>
+<li><p><strong>LinkedBlockingQueue</strong></p>
+<p> 链表组成的有界阻塞队列,默认最大长度为 Integer.MAX_VALUES.</p>
+</li>
+<li><p><strong>PriorityBlockingQueue</strong></p>
+<p> 支持优先级的无界阻塞队列,可自定义 <code>compareTo()</code>方法来指定元素排序规则.无法保证同优先级元素顺序!</p>
+</li>
+<li><p><strong>DelayQueue</strong></p>
+<p> 支持延时获取元素的无界阻塞队列,并且可以自定义 <code>compareTo()</code>方法来指定元素顺序.加入此队列必须实现 <code>Delayed</code>接口.</p>
+</li>
+<li><p><strong>SynchronousQueue</strong></p>
+<p> 不存储元素的阻塞队列,每个 <code>put</code> 操作必须等待一个 <code>take</code> 操作,仅用来传递元素.默认采用非公平的访问策略.</p>
+</li>
+<li><p><strong>LinkedTransferQueue</strong></p>
+<p> 链表组成的无界阻塞队列.多出了特有的两个方法:<code>tryTransfer()</code>和 <code>transfer()</code></p>
+</li>
+<li><p><strong>LinkedBlockingDeque</strong></p>
+<p> 链表组成的双向阻塞队列.</p>
+</li>
 </ol>
-<h3 id="混合持久化方案"><a href="#混合持久化方案" class="headerlink" title="混合持久化方案"></a>混合持久化方案</h3><p>很明显 <code>aof</code> 方案要比 <code>rdb</code> 好得多,因为<code>rdb</code>会丢失大量数据.但是相同数据量的情况下 <code>aof</code>文件会比 <code>rdb</code>大得多,数据恢复起来也要慢的多.为了解决这个问题,在 <strong>Redis 4.0</strong>之后出现一个一种混合持久化的方式.使用<code>rdb</code>全量备份数据,然后使用<code>aof</code>备份那些生成”快照”之后增加的数据.</p>
+<h3 id="线程工厂"><a href="#线程工厂" class="headerlink" title="线程工厂"></a>线程工厂</h3><p>推荐使用 google 的<code>guava</code>提供的 <code>ThreadFactoryBuilder</code> 给线程设置名字.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ThreadFactory threadFactory=<span class="keyword">new</span> ThreadFactoryBuilder()</span><br><span class="line">    .setNameFormat(<span class="string">"my-task-%d"</span>).build();</span><br></pre></td></tr></table></figure>
+
+<h3 id="拒绝策略"><a href="#拒绝策略" class="headerlink" title="拒绝策略"></a>拒绝策略</h3><p>当线程池和队列都满了的情况下,再往线程池中添加任务则会执行下列策略:</p>
+<ul>
+<li>AbortPolicy:直接抛出异常</li>
+<li>CallerRunsPolicy:调用者所在线程执行任务</li>
+<li>DiscardOldestPolicy:丢弃队列里最近的一个任务,并执行当前任务.</li>
+<li>DiscardPolicy:丢弃任务</li>
+</ul>
+<p>同时也可以实现<code>RejectedExecutionHandler</code>来自定义策略.</p>
 
       
     </div>
@@ -343,8 +391,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/14/MVCC 多版本并发控制/" rel="next" title="来谈谈MySQL 中Innodb的 MVCC">
-                <i class="fa fa-chevron-left"></i> 来谈谈MySQL 中Innodb的 MVCC
+              <a href="/2019/10/13/redis/Redis 主从同步/" rel="next" title="Redis 主从同步">
+                <i class="fa fa-chevron-left"></i> Redis 主从同步
               </a>
             
           </div>
@@ -353,8 +401,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/23/RabbitMQ 的可靠性传输/" rel="prev" title="RabbitMQ 的可靠性传输">
-                RabbitMQ 的可靠性传输 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/10/20/CAP 与 BASE 理论/" rel="prev" title="CAP 与 BASE 理论">
+                CAP 与 BASE 理论 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -469,7 +517,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB方案"><span class="nav-number">1.</span> <span class="nav-text">RDB方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-方案"><span class="nav-number">2.</span> <span class="nav-text">AOF 方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合持久化方案"><span class="nav-number">3.</span> <span class="nav-text">混合持久化方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#通用构造参数"><span class="nav-number">1.</span> <span class="nav-text">通用构造参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几种默认线程池"><span class="nav-number">2.</span> <span class="nav-text">几种默认线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作队列-阻塞队列"><span class="nav-number">3.</span> <span class="nav-text">工作队列/阻塞队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程工厂"><span class="nav-number">4.</span> <span class="nav-text">线程工厂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拒绝策略"><span class="nav-number">5.</span> <span class="nav-text">拒绝策略</span></a></li></ol></div>
             
 
           </div>

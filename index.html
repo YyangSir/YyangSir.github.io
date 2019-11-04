@@ -79,16 +79,17 @@
 
 
 
-<meta name="description" content="杨洋的个人博客">
+<meta name="description" content="小菜鸟奋斗史">
+<meta name="keywords" content="杨洋的个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="杨洋的个人博客">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="杨洋的个人博客">
-<meta property="og:description" content="杨洋的个人博客">
+<meta property="og:description" content="小菜鸟奋斗史">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="杨洋的个人博客">
-<meta name="twitter:description" content="杨洋的个人博客">
+<meta name="twitter:description" content="小菜鸟奋斗史">
 
 
 
@@ -124,7 +125,7 @@
 
 
 
-  <title>杨洋的个人博客</title>
+  <title>杨洋的个人博客 - 学习成长之路</title>
   
 
 
@@ -160,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <p class="site-subtitle">学习成长之路</p>
       
   </div>
 
@@ -218,6 +219,582 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/20/CAP 与 BASE 理论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/20/CAP 与 BASE 理论/" itemprop="url">CAP 与 BASE 理论</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-20T15:08:11+08:00">
+                2019-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>当系统由集中式转为分布式的过程当中会出现很多问题,其中必然会引入网络因素,在传统的请求中响应结果不是成功就是失败.然而因为网络的因素,响应结果将会多出<strong>超时</strong>这个状态.有时还会因为网络问题造成只有部分节点间可以通信俗称<strong>脑裂</strong>.或者一个节点直接宕机.在这样的条件下要实现一套严格满足 ACID 特性的事务时,就会出现系统的可用性和严格一致性之间出现冲突,也就是著名的 CAP 定理</p>
+<h3 id="CAP-定理"><a href="#CAP-定理" class="headerlink" title="CAP 定理"></a>CAP 定理</h3><p>cap 理论告诉我们:一个分布式系统不可能<strong>同时</strong>满足<code>一致性(C:Consistency)</code>,<code>可用性(A:Availability)</code>,和<code>分区容错性(P:Partition tolerance)</code>这三个基本需求.</p>
+<p><strong>一致性</strong></p>
+<p>在分布式的环境中,一份数据在修改之后这份数据在不同节点的副本都可以保持一致.所有的用户可以从任意节点读取这份数据的最新值,这样的系统就具有强一致性.</p>
+<p><strong>可用性</strong></p>
+<p>系统提供的服务必须一致处于可用的状态,即:对于用户的每个操作都在有限的时间(用户期望)内返回结果.</p>
+<p><strong>分区容错性</strong></p>
+<p>分布式系统在遇到任何网络故障的时候,仍然需要对外提供满足一致性和可用性的服务.除非是整个网络出现故障.</p>
+<p>网络分区是指在分布式系统中,不同节点的子网络,机房或者异地网络中由于一些原因造成子网络之前网络不连通的状况.但子网络内部是正常的.</p>
+<p>对于分布式系统而言,网络问题是一个必然会出现的异常情况,分区容错性也就是必然要解决的问题.因此设计系统时,往往需要根据系统业务的特点,在<code>一致性</code>与<code>可用性</code>之间寻求平衡.</p>
+<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><p>base 理论是对 cap 中<code>一致性</code>和<code>可用性</code>权衡的结果,其来源于对大规模系统分布式的实践总结.其含义为:<code>基本可用(Basically Available)</code>,<code>软状态(Soft state)</code>,<code>最终一致性(Eventually consistent)</code>三个短语缩写.</p>
+<p><strong>基本可用</strong></p>
+<p>在分布式系统中出现不可预知故障的时候,允许损失部分可用性,如响应时间的损失从 0.5s 增加到 2s,或者某个功能页面被引导到其他的降级页面中.</p>
+<p><strong>软状态</strong></p>
+<p>软状态也被称为弱状态,允许系统中的数据存在中间状态,并且这个状态不会影响系统整体可用,允许不同节点的数据副本的同步存在延迟.</p>
+<p><strong>最终一致性</strong></p>
+<p>数据有修改后,经过一段时间的同步,最终能够达到一个一直的状态,不需要系统实时保证数据的强一致性.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/15/关于线程池的几个参数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/15/关于线程池的几个参数/" itemprop="url">关于线程池ThreadPoolExecutor</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-15T21:59:32+08:00">
+                2019-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在 <code>Executor</code> 中最核心的类是 <code>ThreadPoolExecutor</code>,是线程池的实现类,下面我们将详细介绍有关这个类的构造参数和基本实现.</p>
+<h3 id="通用构造参数"><a href="#通用构造参数" class="headerlink" title="通用构造参数"></a>通用构造参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                         TimUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                         BlockingQueue&lt;Runable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">                         ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                         RejectedExecutionHandler hander)</span></span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>corePoolSize 核心线程池的大小</li>
+<li>maximumPoolSize 最大线程池的大小</li>
+<li>keepAliveTime 线程存活时间</li>
+<li>unit 存活时间的单位</li>
+<li>workQueue暂时保存任务的工作队列</li>
+<li>threadFactory 线程创建工厂</li>
+<li>hander 拒绝策略</li>
+</ul>
+<p>在<code>ThreadPoolExecutor</code>被创建的时候,在线程池里是没有线程的.</p>
+<p>当我们向线程池中提交任务的时候首先会判断<strong>核心线程池(<code>corePoolSize</code>)</strong>中的任务是否都在执行,如果不是则创建新的线程执行任务.</p>
+<p>如果<strong>核心线程池</strong>满了,则判断<strong>工作队列</strong>(<code>workQueue</code>)是否已满,没满则储存在工作队列中.</p>
+<p>如果<strong>工作队列</strong>满了,则判断当前线程数是否等于<strong>最大线程池的大小(<code>maximumPoolSize</code>)</strong>,如果小于则创建一个新的工作线程.否则就交给<strong>拒绝策略</strong>(<code>hander</code>)处理</p>
+<p>这样的执行流程可以让线程池在执行 <code>execute()</code> 方法提交任务时尽可能地避免全局锁.</p>
+<p>在线程池中的工作线程执行完任务后,经过一定的<strong>存活时间(<code>keepAliveTime</code>)</strong>后将会标记为可回收的.当然回收线程会产生额外的消耗.</p>
+<h3 id="几种默认线程池"><a href="#几种默认线程池" class="headerlink" title="几种默认线程池"></a>几种默认线程池</h3><ol>
+<li><p><strong>FixedThreadPool</strong></p>
+<p> 固定线程数的线程池,参数<code>corePoolSize</code>和<code>maximumPoolSize</code>相同,当线程池中线程满后,将后续任务加入队列.队列大小是 Integer.MAX_VALUE</p>
+</li>
+<li><p><strong>SingleThreadExecutor</strong></p>
+<p> 单个线程的线程池,队列大小为Integer.MAX_VALUE</p>
+</li>
+<li><p><strong>CachedThreadPool</strong></p>
+<p> 可缓存的线程池,<code>corePoolSize</code>设置为 0,<code>maximumPoolSize</code>为Integer.MAX_VALUE.队列使用的是没有容量的<code>SynchronousQueue</code>.<code>keepAliveTime</code>为 60,即:空闲线程超过 60s 将会被终止.</p>
+</li>
+<li><p><strong>ScheduledThreadPollExecutor</strong></p>
+<p> 固定长度的线程池,并且以定时或延迟的方式执行任务.</p>
+</li>
+</ol>
+<h3 id="工作队列-阻塞队列"><a href="#工作队列-阻塞队列" class="headerlink" title="工作队列/阻塞队列"></a>工作队列/阻塞队列</h3><p>在 Java 包中提供了 7 个阻塞队列,分别如下:</p>
+<ol>
+<li><p><strong>ArrayBlockingQueue</strong></p>
+<p> 一个有界数组组成的阻塞队列,默认线程以非公平的方式访问队列.即当队列可用时,阻塞的线程都可以争取访问队列的资格.</p>
+</li>
+<li><p><strong>LinkedBlockingQueue</strong></p>
+<p> 链表组成的有界阻塞队列,默认最大长度为 Integer.MAX_VALUES.</p>
+</li>
+<li><p><strong>PriorityBlockingQueue</strong></p>
+<p> 支持优先级的无界阻塞队列,可自定义 <code>compareTo()</code>方法来指定元素排序规则.无法保证同优先级元素顺序!</p>
+</li>
+<li><p><strong>DelayQueue</strong></p>
+<p> 支持延时获取元素的无界阻塞队列,并且可以自定义 <code>compareTo()</code>方法来指定元素顺序.加入此队列必须实现 <code>Delayed</code>接口.</p>
+</li>
+<li><p><strong>SynchronousQueue</strong></p>
+<p> 不存储元素的阻塞队列,每个 <code>put</code> 操作必须等待一个 <code>take</code> 操作,仅用来传递元素.默认采用非公平的访问策略.</p>
+</li>
+<li><p><strong>LinkedTransferQueue</strong></p>
+<p> 链表组成的无界阻塞队列.多出了特有的两个方法:<code>tryTransfer()</code>和 <code>transfer()</code></p>
+</li>
+<li><p><strong>LinkedBlockingDeque</strong></p>
+<p> 链表组成的双向阻塞队列.</p>
+</li>
+</ol>
+<h3 id="线程工厂"><a href="#线程工厂" class="headerlink" title="线程工厂"></a>线程工厂</h3><p>推荐使用 google 的<code>guava</code>提供的 <code>ThreadFactoryBuilder</code> 给线程设置名字.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ThreadFactory threadFactory=<span class="keyword">new</span> ThreadFactoryBuilder()</span><br><span class="line">    .setNameFormat(<span class="string">"my-task-%d"</span>).build();</span><br></pre></td></tr></table></figure>
+
+<h3 id="拒绝策略"><a href="#拒绝策略" class="headerlink" title="拒绝策略"></a>拒绝策略</h3><p>当线程池和队列都满了的情况下,再往线程池中添加任务则会执行下列策略:</p>
+<ul>
+<li>AbortPolicy:直接抛出异常</li>
+<li>CallerRunsPolicy:调用者所在线程执行任务</li>
+<li>DiscardOldestPolicy:丢弃队列里最近的一个任务,并执行当前任务.</li>
+<li>DiscardPolicy:丢弃任务</li>
+</ul>
+<p>同时也可以实现<code>RejectedExecutionHandler</code>来自定义策略.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/redis/Redis 主从同步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/13/redis/Redis 主从同步/" itemprop="url">Redis 主从同步</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T17:12:06+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>为了保证高可用,Redis 的主从同步是大多数公司都会做的方案,当 <code>master</code> 挂掉的时候让 <code>slave</code> 去接管,保证服务的继续.在 Redis 重启需要恢复数据时则需要将部分差异数据同步过来.下面将简单介绍这个过程.</p>
+<h3 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h3><p>Reids 同步的指令流,主节点会将修改性的指令记录在本地的内存 <code>buffer</code>中,然后异步将 <code>buffer</code> 中的指令同步到从节点,从节点会记录一个偏移量,向主节点反馈自己同步到哪里了.</p>
+<p>因为<strong>内存 buffer 是有限的</strong>,所以主节点不会把指令都记录在内存中.而是保留一个定长数组,如果内存 <code>buffer</code>满了就会<strong>从头开始覆盖前面的内容</strong>造成数据不一致</p>
+<h3 id="快照同步"><a href="#快照同步" class="headerlink" title="快照同步"></a>快照同步</h3><p>快照同步非常消耗资源.他首先在主节点上进行 <code>bgsave</code>操作,将当前内存的数据全部保存到磁盘文件中,然后将磁盘文件传送给从节点.从节点将之前数据全部清空,然后加载快照中的数据.加载完毕后通知主节点继续进行增量同步.如果这时需要同步的指令在主节点中被覆盖了,那将会再次发起快照同步,陷入死循环.所以设置一个合适的 <code>buffer</code> 大小是很重要的.</p>
+<p>当有新的节点加入到集群中,必须先进行一次快照同步,之后进行增量同步.</p>
+<h3 id="无盘复制"><a href="#无盘复制" class="headerlink" title="无盘复制"></a>无盘复制</h3><p>在 Redis 2.8.18 版本后,Redis 支持无盘复制.主节点直接通过套接字将快照内容发送给从节点.并且这个过程是一边遍历内存一边将序列化的内容发送到 从节点.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/RabbitMQ 的可靠性传输/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/23/RabbitMQ 的可靠性传输/" itemprop="url">RabbitMQ 的可靠性传输</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-23T22:43:49+08:00">
+                2019-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>首先分析下 RabbitMQ 丢数据的几种情况:</p>
+<ol>
+<li>生产者丢数据</li>
+<li>RabbitMQ 丢数据</li>
+<li>消费者丢数据</li>
+</ol>
+<p>弄清楚丢数据的几种情况后我们逐个分析下</p>
+<h3 id="生产者丢数据"><a href="#生产者丢数据" class="headerlink" title="生产者丢数据"></a>生产者丢数据</h3><p>消息在发送给 RabbitMQ 的过程中数据因为各种原因丢失了,这时可以在生产者中开启<code>confirm</code>模式.每次写入消息RabbitMQ 都会异步回传一个 <code>ack</code>信息告诉生产者消息写入成功了.如果 RabbitMQ 没能处理消息则会回调 <code>nack</code>接口通知消息接收失败.</p>
+<h3 id="RabbitMQ-丢数据"><a href="#RabbitMQ-丢数据" class="headerlink" title="RabbitMQ 丢数据"></a>RabbitMQ 丢数据</h3><p>RabbitMQ 自己丢数据则需要开启持久化,将消息写入磁盘,这样RabbitMQ 重启后会自己读取之前的数据.要注意的是需要同时开启 queue 元数据的持久化和 queue 中数据消息的持久化,才能保证数据不丢失.</p>
+<h3 id="消费者丢数据"><a href="#消费者丢数据" class="headerlink" title="消费者丢数据"></a>消费者丢数据</h3><p>这个时候就需要 RabbitMQ 的手动 <code>ack</code>机制了,必须关了 RabbitMQ 的自动 <code>ack</code>.在业务逻辑处理完成之后在程序里手动 <code>ack</code>通知 RabbitMQ 消息已处理.否则 RabbitMQ 会把这个消息分配给别的消费者处理.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -322,6 +899,131 @@
 <li>使用新的日志文件替换原先的日志文件</li>
 </ol>
 <h3 id="混合持久化方案"><a href="#混合持久化方案" class="headerlink" title="混合持久化方案"></a>混合持久化方案</h3><p>很明显 <code>aof</code> 方案要比 <code>rdb</code> 好得多,因为<code>rdb</code>会丢失大量数据.但是相同数据量的情况下 <code>aof</code>文件会比 <code>rdb</code>大得多,数据恢复起来也要慢的多.为了解决这个问题,在 <strong>Redis 4.0</strong>之后出现一个一种混合持久化的方式.使用<code>rdb</code>全量备份数据,然后使用<code>aof</code>备份那些生成”快照”之后增加的数据.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/MVCC 多版本并发控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yyang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨洋的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/14/MVCC 多版本并发控制/" itemprop="url">来谈谈MySQL 中Innodb的 MVCC</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-14T22:36:21+08:00">
+                2019-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<code>InnoDB</code>执行普通查询操作读取被锁的那个记录时,为了不释放记录上的锁会生成一个<code>版本快照</code>(ReadView),读取操作就可以直接返回快照数据,而不需要等待锁的释放,提升了性能.由于并发操作一行记录不只有一个快照,由此带来的并发控制称为多版本并发控制即 <code>MVCC</code>(Multi-Version Concurrency Control).</p>
+<h2 id="版本快照生成机制"><a href="#版本快照生成机制" class="headerlink" title="版本快照生成机制"></a>版本快照生成机制</h2><p>此外,只有在 <code>READ COMMITTD</code>和 <code>REPATABLE READ</code> 两种隔离级别下会有.并且因为生产<code>版本快照</code>的时机不同这两种级别读取的数据也是不一样的.</p>
+<p><strong>READ COMMITTD</strong></p>
+<p>在每次进行查询操作之前都会生产一个<code>版本快照</code>,所以读取到的总是新的快照数据.</p>
+<p><strong>REPATABLE READ</strong></p>
+<p>在第一次查询操作前会生成一个<code>版本快照</code>,之后的查询会重复使用.所以读取到的是最开始的数据版本.</p>
 
           
         
@@ -954,160 +1656,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/20/单例模式最佳实践/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yyang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="杨洋的个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/20/单例模式最佳实践/" itemprop="url">单例模式最佳实践</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-20T11:27:47+08:00">
-                2019-04-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>单例模式是最简单的设计模式之一,提供了一种创建对象的方式,确保在整个系统中只有一个对象被创建.单例模式解决了频繁创建重复对象的问题节约资源,可以省略创建对象所需要花费的时间,对于一些重量级对象而言这点是很重要的.并且因为不需要频繁创建对象 GC 的压力也会有所减轻.</p>
-<h2 id="单例模式的一些实现方式"><a href="#单例模式的一些实现方式" class="headerlink" title="单例模式的一些实现方式"></a>单例模式的一些实现方式</h2><p>通常来说在 Java 中的单例模式分为饿汉式和懒汉式,而且单例类需要一个 private 的构造函数防止被其他代码实例化.下面来具体说一下java 中单例模式的实现.</p>
-<h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">  	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance =<span class="keyword">new</span> Singleton();</span><br><span class="line">    <span class="comment">//私有化构造方法</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>饿汉式的单例模式代码简单,线程安全.先创建对象,然后等待调用首先私有化构造方法,防止别人使用new 创建对象.通过classLoader机制保证了单例对象的唯一性 但是不能确保instance 是在调用getInstance()方法的时候生成的不能达到懒加载效果</p>
-<h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">   	<span class="comment">//加入 synchronize 保证线程安全</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">            instance=<span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了达到懒加载的效果,我们使用懒汉式的单例模式,在第一次调用方法getInstance()的时候才去创建对象.可以达到延迟加载的效果并且加入了 synchronize 保证线程安全,但每次调用代码的时候都要加锁,性能比较低还有可能发生阻塞</p>
-<h3 id="DCL双重校验锁"><a href="#DCL双重校验锁" class="headerlink" title="DCL双重校验锁"></a>DCL双重校验锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="comment">//volatile防止指令重排序</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance=<span class="keyword">null</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">              	<span class="comment">//加入第二次校验</span></span><br><span class="line">                <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    instance=<span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>双重校验锁就是为了解决上述问题而存在的,先检查实例是否存在然后再去创建,可以不用每次调用方法都获取同步锁性能会有一些提升,减小的锁的颗粒度.但是 java 对象的创建和赋值不是一步操作的,有可能先去赋值给中instance之后才去创建 Singleton 这时添加volatile关键字防止指令重排序解决了这个问题.</p>
-<p><strong>对象创建的过程:</strong></p>
-<p>在代码的第 12 行 instance =new Singleton();大致分为三个过程<br>1.分配对象的内存空间 此时 instance !=null</p>
-<p>2.初始化对象</p>
-<p>3.将instance 指向分配的内存空间</p>
-<p>其中2 和 3不一定是有序的 所以线程 B 会访问到一个还未初始化的对象</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g5o1bj71chj30gs0dngm7.jpg" alt></p>
-<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleHoler</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance=<span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingleHoler.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>看过繁琐的DCL后 下面介绍一种简洁的单例模式静态内部类.当Singleton被创建的时候不会去加载SingleHoler,只有第一次调用getInstance()方法时才回去创建instance,加载SingleHoler将常量池中的符号引用替换成直接引用,这种方式不仅保证了线程安全而且可以达到延迟加载的效果.</p>
-<p><strong>classload机制</strong></p>
-<p>解决重排序的方法有两种,第一种就是使用 volatile ,第二种则是现在要介绍的方法</p>
-<p>调用类的静态成员(非字符串常量)的时候会导致类(SingleHoler)的初始化.并且在执行类的初始化期间,JVM 会获取一个初始化锁,这个锁可以同步多个线程对同一个类的初始化.</p>
-<p><strong>类加载的步骤:</strong></p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g5o1l6jvz2j30av03v747.jpg" alt></p>
-<p>将符号引用替换成直接引用是在解析的阶段完成的.</p>
-<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"快乐就完事了！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>这种方法在功能上与公有域方法相近，但是它更加简洁，无偿提供了序列化机制，绝对防止多次实例化，即使是在面对复杂序列化或者反射攻击的时候。虽然这种方法还没有广泛采用，但是单元素的枚举类型已经成为实现Singleton的最佳方法。   –《Effective Java 中文版 第二版》</p>
-</blockquote>
-<p>简单到不能再简单了啊.jvm 在加载枚举类的时候会使用loadClass方法使用同步代码块解决线程安全问题.使用 enum 的单例模式还能避免反序列化破坏单例并且不能被反射攻击.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1141,7 +1696,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">Yyang</p>
-              <p class="site-description motion-element" itemprop="description">杨洋的个人博客</p>
+              <p class="site-description motion-element" itemprop="description">小菜鸟奋斗史</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -1151,7 +1706,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
